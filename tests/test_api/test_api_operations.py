@@ -19,6 +19,7 @@ from pyinfra.api.exceptions import PyinfraError
 from pyinfra.api.operation import OperationMeta, add_op
 from pyinfra.api.operations import run_ops
 from pyinfra.api.state import StateOperationMeta
+from pyinfra.connectors.util import CommandOutput, OutputLine
 from pyinfra.context import ctx_host, ctx_state
 from pyinfra.operations import files, python, server
 
@@ -719,7 +720,6 @@ class TestOperationRetry(PatchSSHTestCase):
 
         # Set up fake command execution - always succeed but with proper output format
         # Use the existing FakeBuffer/FakeChannel from test utils
-        from pyinfra.connectors.util import OutputLine, CommandOutput
 
         # First two calls trigger retry_until, third doesn't
         def command_side_effect(*args, **kwargs):
@@ -816,7 +816,6 @@ class TestOperationRetry(PatchSSHTestCase):
         )
 
         # Set up fake command execution
-        from pyinfra.connectors.util import OutputLine, CommandOutput
 
         def command_side_effect(*args, **kwargs):
             lines = [OutputLine("stdout", "test output"), OutputLine("stderr", "no errors")]
@@ -869,7 +868,6 @@ class TestOperationRetry(PatchSSHTestCase):
         )
 
         # Set up fake command execution with changing output
-        from pyinfra.connectors.util import OutputLine, CommandOutput
 
         call_count = 0
 

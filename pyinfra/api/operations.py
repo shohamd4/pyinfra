@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import traceback
 import time
+import traceback
 from itertools import product
 from socket import error as socket_error, timeout as timeout_error
 from typing import TYPE_CHECKING, Optional, cast
