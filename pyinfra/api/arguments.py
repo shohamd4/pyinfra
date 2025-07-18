@@ -131,18 +131,6 @@ auth_argument_meta: dict[str, ArgumentMeta] = {
         "Execute/apply any changes with doas as a non-root user.",
         default=lambda config: config.DOAS_USER,
     ),
-    "_retries": ArgumentMeta(
-        "Number of times to retry failed operations.",
-        default=lambda config: config.RETRY,
-    ),
-    "_retry_delay": ArgumentMeta(
-        "Delay in seconds between retry attempts.",
-        default=lambda config: config.RETRY_DELAY,
-    ),
-    "_retry_until": ArgumentMeta(
-        "Callable taking output data that returns True to continue retrying.",
-        default=lambda config: None,
-    ),
 }
 
 shell_argument_meta: dict[str, ArgumentMeta] = {
@@ -253,15 +241,15 @@ def all_global_arguments() -> List[tuple[str, Type]]:
 retry_argument_meta: dict[str, ArgumentMeta] = {
     "_retries": ArgumentMeta(
         "Number of times to retry failed operations.",
-        default=lambda _: 0,
+        default=lambda config: config.RETRY,
     ),
     "_retry_delay": ArgumentMeta(
         "Delay in seconds between retry attempts.",
-        default=lambda _: 5,
+        default=lambda config: config.RETRY_DELAY,
     ),
     "_retry_until": ArgumentMeta(
         "Callable taking output data that returns True to continue retrying.",
-        default=lambda _: None,
+        default=lambda config: None,
     ),
 }
 
