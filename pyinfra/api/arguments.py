@@ -139,6 +139,10 @@ auth_argument_meta: dict[str, ArgumentMeta] = {
         "Delay in seconds between retry attempts.",
         default=lambda config: config.RETRY_DELAY,
     ),
+    "_retry_until": ArgumentMeta(
+        "Callable taking output data that returns True to continue retrying.",
+        default=lambda config: None,
+    ),
 }
 
 shell_argument_meta: dict[str, ArgumentMeta] = {
@@ -248,7 +252,7 @@ def all_global_arguments() -> List[tuple[str, Type]]:
 # Create a dictionary for retry arguments
 retry_argument_meta: dict[str, ArgumentMeta] = {
     "_retries": ArgumentMeta(
-        "Number of times to retry failed commands.",
+        "Number of times to retry failed operations.",
         default=lambda _: 0,
     ),
     "_retry_delay": ArgumentMeta(
