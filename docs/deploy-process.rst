@@ -25,10 +25,9 @@ And here's the deploy code:
 
 .. code:: python
 
-    from pyinfra import host
-    from pyinfra.operations import apt
+    from pyinfra import host, operations
 
-    apt.packages(
+    operations.apt.packages(
         name="Install base debugging packages",
         packages=["htop", "iftop"],
         update=True,
@@ -36,13 +35,13 @@ And here's the deploy code:
     )
 
     if "db_server" in host.groups:
-        apt.packages(
+        operations.apt.packages(
             name="Install postgres server",
             packages=["postgresql-server"],
         )
 
     if "web_servers" in host.groups:
-        apt.packages(
+        operations.apt.packages(
             name="Install nginx",
             packages=["nginx"],
         )
@@ -74,17 +73,15 @@ Let's look at an example - the deploy code here is bad but highlights the orderi
 
 .. code:: python
 
-    from pyinfra import facts, host
-    from pyinfra.operations import apt
-    from pyinfra.facts.files import File
+    from pyinfra import facts, host, operations
 
-    apt.packages(
+    operations.apt.packages(
         name="Install nginx",
         packages=["nginx"],
     )
 
-    if host.get_fact(File, path="/etc/nginx/sites-enabled/default"):
-        files.file(
+    if host.get_fact(facts.files.File, path="/etc/nginx/sites-enabled/default"):
+        operations.files.file(
             name="Remove nginx default site",
             path="/etc/nginx/sites-enabled/default",
             present=False,
@@ -102,15 +99,14 @@ This gets executed *before* the ``apt.packages`` install, and evaluates to ``Fal
 
 .. code:: python
 
-    from pyinfra import facts, host
-    from pyinfra.operations import apt, files
+    from pyinfra import facts, host, operations
 
-    apt.packages(
+    operations.apt.packages(
         name="Install nginx",
         packages=["nginx"],
     )
 
-    files.file(
+    operations.files.file(
         name="Remove nginx default site",
         path="/etc/nginx/sites-enabled/default",
         present=False,
@@ -128,22 +124,21 @@ Let's use a simple example as above with add a conditional reload based on the o
 
 .. code:: python
 
-    from pyinfra import facts, host
-    from pyinfra.operations import apt, files, server
+    from pyinfra import facts, host, operations
 
-    apt.packages(
+    operations.apt.packages(
         name="Install nginx",
         packages=["nginx"],
     )
 
-    remove_default_site = files.file(
+    remove_default_site = operations.files.file(
         name="Remove nginx default site",
         path="/etc/nginx/sites-enabled/default",
         present=False,
     )
 
     if remove_default_site.changed:
-        server.service(
+        operation.server.service(
             name="Reload nginx",
             service="nginx",
             reloaded=True,
@@ -159,21 +154,20 @@ Since this gets executed before nginx is installed by ``apt.packages`` operation
 
 .. code:: python
 
-    from pyinfra import facts, host
-    from pyinfra.operations import apt, files, server
+    from pyinfra import facts, host, operations
 
-    apt.packages(
+    operations.apt.packages(
         name="Install nginx",
         packages=["nginx"],
     )
 
-    remove_default_site = files.file(
+    remove_default_site = operations.files.file(
         name="Remove nginx default site",
         path="/etc/nginx/sites-enabled/default",
         present=False,
     )
 
-    server.service(
+    operations.server.service(
         name="Reload nginx",
         service="nginx",
         reloaded=True,
